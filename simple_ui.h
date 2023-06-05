@@ -1,6 +1,6 @@
 /**
  ******************************************************************************
- * @file    simple_ui.c/h
+ * @file    simple_ui.h
  * @author  Enoky Bertram
  * @version V0.0.0 dev1
  * @date    Jun.4.2023
@@ -27,88 +27,70 @@
 #define NUM_OF_SECOND_LEVEL_ITEMS 5
 #define NUM_OF_UNIT_LEVEL_ITEMS 7
 
-typedef enum SimpleUiUnitType
+typedef enum SimpleUiNodeType
 {
-    DISPLAY,
-    SWITCH,
-    ADJUST,
-} simple_ui_unit_type_e_t;
+    SUI_MENU,    // 菜单项
+    SUI_DISPLAY, // 可操作项 操作类型-显示
+    SUI_SWITCH,  // 可操作项 操作类型-切换
+    SUI_ADJUST,  // 可操作项 操作类型-调整
+} simple_ui_node_type_e_t;
 
 typedef enum SimpleUiMenuOperation
 {
-    NEXT_PAGE,
-    PRE_PAGE,
-    NEXT_ITEM,
-    PRE_ITEM,
-    SELECT_ITEM,
+    SUI_NEXT_PAGE,
+    SUI_PRE_PAGE,
+    SUI_NEXT_ITEM,
+    SUI_PRE_ITEM,
+    SUI_SELECT_ITEM,
 } simple_ui_menu_operation_e_t;
+
+typedef struct SimpleUIInfo
+{
+    simple_ui_node_type_e_t node_type; // 节点类型
+
+    char name[20]; // 节点名称
+    void *data;    // 节点数据
+
+    uint8_t first_level_index;
+    uint8_t seconde_level_index;
+    uint8_t third_level_index;
+} simple_ui_info_s_t;
+
+typedef struct SimpleUINode
+{
+    simple_ui_info_s_t info; // 节点信息
+
+    struct SimpleUINode *parent;       // 父节点指针
+    struct SimpleUINode *first_child;  // 第一个子节点指针
+    struct SimpleUINode *next_sibling; // 下一个兄弟节点指针
+} simple_ui_node_s_t;
+
+typedef struct SimpleUI
+{
+    uint8_t ui_tree_size;
+
+    simple_ui_node_s_t **ui_tree;
+
+    uint8_t number_of_first_level_item;
+    uint8_t number_of_seconde_level_item;
+    uint8_t number_of_third_level_item;
+
+    uint8_t first_level_index;
+    uint8_t seconde_level_index;
+    uint8_t third_level_index;
+} simple_ui_s_t;
 
 typedef enum SimpleUiError
 {
-    OK = 0,
-    SUI_ERROR,
+    SUI__OK = 0,
+    SUI__ADD_FIRST_LEVEL_ITEM_ERROR__EXISTING_ITEM,
+    SUI__ADD_SECOND_LEVEL_ITEM_ERROR__EXISTING_ITEM,
+    SUI__ADD_SECOND_LEVEL_ITEM_ERROR__BELONGS_FIRST_LEVEL_ITEM_DOES_NOT_EXIST,
+    SUI__ERROR,
+    SUI_ERROR = 1,
 } simple_ui_error_e_t;
 
-/**
- * @brief UI 最小可操作单位
- */
-typedef struct SimpleUiUnit
-{
-    char name[10]; // 名称
-
-    simple_ui_unit_type_e_t unit_type; // 可操作单位类型
-} simple_ui_unit_level_s_t;
-
-/**
- * @brief UI 次级菜单项结构体
- */
-typedef struct SimpleUiSecondLevelItem
-{
-    char name[10]; // 名称
-
-    uint8_t number_of_unit_level_menu_pages; // 单元层菜单页数
-
-    simple_ui_unit_level_s_t (*unit_level_menu)[NUM_OF_UNIT_LEVEL_ITEMS];
-} simple_ui_second_level_item_s_t;
-
-/**
- * @brief UI 一级菜单项结构体
- */
-typedef struct SimpleUiFirstLevelItem
-{
-    char name[10]; // 名称
-
-    uint8_t number_of_second_level_menu_pages; // 次级菜单页数
-
-    simple_ui_second_level_item_s_t (*second_level_menu)[NUM_OF_SECOND_LEVEL_ITEMS]; //[次级菜单页][次级菜单项]
-} simple_ui_first_level_item_s_t;
-
-/**
- * @brief UI 结构体
- */
-typedef struct SimpleUi
-{
-    uint8_t number_of_first_level_menu_pages; // 一级菜单页数
-
-    simple_ui_first_level_item_s_t (*first_level_menu)[NUM_OF_FIRST_LEVEL_ITEMS]; //[一级菜单页][一级菜单项]
-
-    /**
-     * @brief 索引
-     * [0] UI所在层级
-     * [1] 一级菜单所在页
-     * [2] 一级菜单所在项
-     * [3] 次级菜单所在页
-     * [4] 次级菜单所在项
-     * [5] 三级菜单所在页
-     * [6] 三级菜单所在项
-     */
-    uint8_t index[7];
-} simple_ui_s_t;
-
-simple_ui_error_e_t SUI_Init(simple_ui_s_t *ui, uint8_t number_of_first_level_menu_pages);
-simple_ui_error_e_t SUI_AddFirstLevelItem(simple_ui_s_t *ui, uint8_t first_level_page_index,
-                                          uint8_t first_level_item_index, char name[10],
-                                          uint8_t number_of_second_level_menu_pages);
-void SUI_Run(simple_ui_s_t *ui);
+simple_ui_error_e_t SUI_Init(simple_ui_s_t *ui);
+simple_ui_error_e_t SUI_AddFirstLevelItem(simple_ui_s_t *ui, const char *name, uint8_t first_level_index);
 
 #endif /* __SIMPLE_UI_H_ */
