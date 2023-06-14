@@ -13,23 +13,31 @@ int main(void)
 
     SUI_Init(&ui, "SUI");
 
-    printf("%d\r\n", SUI_AddFirstLevelItem(&ui, "test_1st"));
-    printf("%d\r\n", SUI_AddSecondLevelItem(&ui, "test_1st", "test_2cd"));
-    printf("%d\r\n", SUI_AddThirdLevelItem(&ui, "test_1st", "test_2cd", "test_3th", SUI_DISPLAY, &test_num_display));
-    printf("%d\r\n", SUI_AddThirdLevelItem(&ui, "test_1st", "test_2cd", "test_4th", SUI_DISPLAY, &test_num_display));
-    printf("%d\r\n", SUI_AddThirdLevelItem(&ui, "test_1st", "test_2cd", "test_5th", SUI_DISPLAY, &test_num_display));
-    printf("%d\r\n", SUI_AddThirdLevelItem(&ui, "test_1st", "test_2cd", "test_6th", SUI_DISPLAY, &test_num_display));
-    printf("%d\r\n", SUI_AddThirdLevelItem(&ui, "test_1st", "test_2cd", "test_7th", SUI_DISPLAY, &test_num_display));
+    printf("%d\r\n", SUI_AddFirstLevelItem(&ui, "A"));
+    printf("%d\r\n", SUI_AddSecondLevelItem(&ui, "A", "A_a"));
+    printf("%d\r\n", SUI_AddThirdLevelItem(&ui, "A", "A_a", "A_a_1", SUI_DISPLAY, &test_num_display));
+    printf("%d\r\n", SUI_AddThirdLevelItem(&ui, "A", "A_a", "A_a_2", SUI_DISPLAY, &test_num_display));
+    printf("%d\r\n", SUI_AddThirdLevelItem(&ui, "A", "A_a", "A_a_3", SUI_DISPLAY, &test_num_display));
+    printf("%d\r\n", SUI_AddThirdLevelItem(&ui, "A", "A_a", "A_a_4", SUI_DISPLAY, &test_num_display));
+    printf("%d\r\n", SUI_AddThirdLevelItem(&ui, "A", "A_a", "A_a_5", SUI_DISPLAY, &test_num_display));
+    printf("%d\r\n", SUI_AddThirdLevelItem(&ui, "A", "A_a", "A_a_6", SUI_DISPLAY, &test_num_display));
+    printf("%d\r\n", SUI_AddThirdLevelItem(&ui, "A", "A_a", "A_a_7", SUI_DISPLAY, &test_num_display));
+    printf("%d\r\n", SUI_AddThirdLevelItem(&ui, "A", "A_a", "A_a_8", SUI_DISPLAY, &test_num_display));
+    printf("%d\r\n", SUI_AddThirdLevelItem(&ui, "A", "A_a", "A_a_9", SUI_DISPLAY, &test_num_display));
+    printf("%d\r\n", SUI_AddThirdLevelItem(&ui, "A", "A_a", "A_a_10", SUI_DISPLAY, &test_num_display));
 
-    // printf("%d\r\n", get_node_index_of_root(get_second_level_node_by_path(ui.ui_tree[0], "test_1st", "test_2cd")));
+    printf("%d\r\n", SUI_AddFirstLevelItem(&ui, "B"));
+
+    printf("%d\r\n", SUI_AddFirstLevelItem(&ui, "C"));
+
+    printf("%d\r\n", SUI_AddFirstLevelItem(&ui, "D"));
 
     while (1)
     {
         test_num_display++;
+
         printf("\r\n===+==========================+===\r\n");
         SUI_Run(&ui);
         printf("\r\n===+==========================+===\r\n");
-
-        Sleep(500);
     }
 }

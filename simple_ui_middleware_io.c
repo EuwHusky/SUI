@@ -2,8 +2,8 @@
  ******************************************************************************
  * @file    simple_ui_middleware_io.c
  * @author  Enoky Bertram
- * @version v0.0.0 dev4
- * @date    Jun.6.2023
+ * @version v0.0.0 dev5
+ * @date    Jun.14.2023
  * @brief   中间层 交互接口
  * @note    happyhappyhappy
  ******************************************************************************
@@ -20,7 +20,7 @@ static uint8_t calculate_blank_between_item(uint8_t display_area_height, uint8_t
 }
 static void show_string(uint8_t x, uint8_t y, const char *str)
 {
-    printf("%s\r\n", str);
+    printf("%s", str);
 }
 static void show_integer(uint8_t x, uint8_t y, uint8_t *num)
 {
@@ -41,11 +41,20 @@ static void sui_display_page_mark(uint8_t *current_page)
     show_string(DISPLAY_AREA_WIDTH - 4, 0, "P-");
     show_integer(DISPLAY_AREA_WIDTH - 2, 0, current_page);
 }
-static void sui_display_item_mark(uint8_t y)
+static void sui_display_item_mark(uint8_t y, uint8_t is_enabled)
 {
-    // 菜单项所在行左右两侧显示
-    show_string(0, y, ">");
-    show_string(DISPLAY_AREA_WIDTH - 1, y, "<");
+    if (is_enabled)
+    {
+        // 菜单项所在行左右两侧显示
+        show_string(0, y, ">");
+        show_string(DISPLAY_AREA_WIDTH - 1, y, "<");
+    }
+    else if (!is_enabled)
+    {
+        // 菜单项所在行左右两侧显示
+        show_string(0, y, " ");
+        show_string(DISPLAY_AREA_WIDTH - 1, y, " ");
+    }
 }
 static void sui_display_item_name(uint8_t y, const char *item_name)
 {
@@ -57,11 +66,11 @@ static void sui_display_item_data(uint8_t y, simple_ui_node_type_e_t node_type, 
     // 菜单项所在行靠右显示
     if (SUI_SWITCH == node_type) // 切换类型用整形显示
     {
-        show_integer(DISPLAY_AREA_WIDTH - 2, y, data);
+        show_integer(DISPLAY_AREA_WIDTH - 2, y, (uint8_t *)data);
     }
     else if (SUI_ADJUST == node_type || SUI_DISPLAY == node_type) // 调整和显示类型用浮点型表示
     {
-        show_float(DISPLAY_AREA_WIDTH - 9, y, data);
+        show_float(DISPLAY_AREA_WIDTH - 9, y, (float *)data);
     }
     else if (SUI_MENU == node_type) // 菜单项无数据，显示提示信息
     {
@@ -73,34 +82,18 @@ void sui_display_page(const char *menu_name)
 {
     sui_display_menu_name(menu_name);
 }
-void sui_display_item(simple_ui_menu_level_e_t level, uint8_t current_item, const char *item_name,
-                      simple_ui_node_type_e_t node_type, void *data)
+void sui_display_an_item(uint8_t page_item_capacity, uint8_t current_item, uint8_t item_index, const char *item_name,
+                         simple_ui_node_type_e_t node_type, void *data)
 {
-
     uint8_t y = DISPLAY_AREA_HEIGHT;
-    switch (level)
-    {
-    case SUI_FIRST: {
-        y -= ((NUM_OF_FIRST_LEVEL_PAGE_ITEM_CAPACITY - current_item) *
-              (calculate_blank_between_item(DISPLAY_AREA_HEIGHT, NUM_OF_FIRST_LEVEL_PAGE_ITEM_CAPACITY) + 1));
-    }
-    break;
-    case SUI_SECOND: {
-        y -= ((NUM_OF_SECOND_LEVEL_PAGE_ITEM_CAPACITY - current_item) *
-              (calculate_blank_between_item(DISPLAY_AREA_HEIGHT, NUM_OF_SECOND_LEVEL_PAGE_ITEM_CAPACITY) + 1));
-    }
-    break;
-    case SUI_THIRD: {
-        y -= ((NUM_OF_THIRD_LEVEL_PAGE_ITEM_CAPACITY - current_item) *
-              (calculate_blank_between_item(DISPLAY_AREA_HEIGHT, NUM_OF_THIRD_LEVEL_PAGE_ITEM_CAPACITY) + 1));
-    }
-    break;
 
-    default:
-        break;
-    }
+    y -= ((page_item_capacity - item_index) *
+          (calculate_blank_between_item(DISPLAY_AREA_HEIGHT, page_item_capacity) + 1));
 
-    sui_display_item_mark(y);
+    if (current_item == item_index)
+        sui_display_item_mark(y, 1);
+    else
+        sui_display_item_mark(y, 0);
     sui_display_item_name(y, item_name);
     sui_display_item_data(y, node_type, data);
 }

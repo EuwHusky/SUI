@@ -2,8 +2,8 @@
  ******************************************************************************
  * @file    simple_ui.h
  * @author  Enoky Bertram
- * @version v0.0.0 dev4
- * @date    Jun.6.2023
+ * @version v0.0.0 dev5
+ * @date    Jun.14.2023
  * @brief   A Simple UI Switcher /一个简易用户界面
  * @note    happyhappyhappy
  ******************************************************************************
@@ -61,6 +61,6 @@ extern simple_ui_error_e_t SUI_AddSecondLevelItem(simple_ui_s_t *ui, const char 
 extern simple_ui_error_e_t SUI_AddThirdLevelItem(simple_ui_s_t *ui, const char *belongs_first_level_item_name,
                                                  const char *belongs_second_level_item_name, const char *name,
                                                  simple_ui_node_type_e_t node_type, void *data);
-extern void SUI_Run(simple_ui_s_t *ui);
+extern simple_ui_error_e_t SUI_Run(simple_ui_s_t *ui);
 
 #endif /* __SIMPLE_UI_H_ */

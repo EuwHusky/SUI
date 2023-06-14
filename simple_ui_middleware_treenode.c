@@ -2,8 +2,8 @@
  ******************************************************************************
  * @file    simple_ui_middleware_treenode.c
  * @author  Enoky Bertram
- * @version v0.0.0 dev4
- * @date    Jun.6.2023
+ * @version v0.0.0 dev5
+ * @date    Jun.14.2023
  * @brief   中间层 数据结构
  * @note    happyhappyhappy
  ******************************************************************************
@@ -63,7 +63,7 @@ simple_ui_node_s_t *find_ui_node(simple_ui_node_s_t *parent, const char *target)
     return found_node;
 }
 
-simple_ui_node_s_t *find_child_ui_node(simple_ui_node_s_t *parent, const char *target)
+simple_ui_node_s_t *find_child_ui_node_by_name(simple_ui_node_s_t *parent, const char *target)
 {
     // 如果父节点为空,直接返回父节点
     if (parent == NULL || parent->first_child == NULL)
@@ -87,6 +87,26 @@ simple_ui_node_s_t *find_child_ui_node(simple_ui_node_s_t *parent, const char *t
             found_node = found_node->next_sibling;
         }
     }
+    return found_node;
+}
+
+simple_ui_node_s_t *find_child_ui_node_by_index(simple_ui_node_s_t *parent, uint8_t target_index)
+{
+    uint8_t index = target_index;
+    // 如果父节点为空,直接返回父节点
+    if (parent == NULL || parent->first_child == NULL)
+    {
+        return NULL;
+    }
+
+    simple_ui_node_s_t *found_node = parent->first_child;
+
+    while (index--)
+    {
+        found_node = found_node->next_sibling;
+    }
+
+    return found_node;
 }
 
 /**
@@ -127,4 +147,27 @@ uint8_t get_node_index_of_parent(simple_ui_node_s_t *child)
     }
 
     return index;
+}
+
+/**
+ * @brief 获得节点的子节点数
+ */
+uint8_t get_child_node_num_of_parent(simple_ui_node_s_t *parent)
+{
+    uint8_t num = 0;
+
+    if (parent == NULL)
+    {
+        return -1;
+    }
+
+    simple_ui_node_s_t *child_node = parent->first_child;
+
+    while (child_node != NULL)
+    {
+        child_node = child_node->next_sibling;
+        num++;
+    }
+
+    return num;
 }

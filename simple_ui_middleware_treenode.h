@@ -2,8 +2,8 @@
  ******************************************************************************
  * @file    simple_ui_middleware_treenode.h
  * @author  Enoky Bertram
- * @version v0.0.0 dev4
- * @date    Jun.6.2023
+ * @version v0.0.0 dev5
+ * @date    Jun.14.2023
  * @brief   中间层 数据结构
  * @note    happyhappyhappy
  ******************************************************************************
@@ -34,16 +34,19 @@ typedef struct SimpleUINode
 extern simple_ui_node_s_t *create_ui_node(simple_ui_node_type_e_t node_type, const char *name, void *data);
 extern void add_sub_ui_node(simple_ui_node_s_t *parent, simple_ui_node_s_t *child);
 extern simple_ui_node_s_t *find_ui_node(simple_ui_node_s_t *parent, const char *target);
-extern simple_ui_node_s_t *find_child_ui_node(simple_ui_node_s_t *parent, const char *target);
+extern simple_ui_node_s_t *find_child_ui_node_by_name(simple_ui_node_s_t *parent, const char *target);
+extern simple_ui_node_s_t *find_child_ui_node_by_index(simple_ui_node_s_t *parent, uint8_t index);
 extern uint8_t get_node_index_of_root(simple_ui_node_s_t *child);
 extern uint8_t get_node_index_of_parent(simple_ui_node_s_t *child);
+extern uint8_t get_child_node_num_of_parent(simple_ui_node_s_t *parent);
 
-#define get_first_level_node_by_path(root, first_name) find_child_ui_node(root, first_name)
+#define get_first_level_node_by_path(root, first_name) find_child_ui_node_by_name(root, first_name)
 
 #define get_second_level_node_by_path(root, first_name, second_name)                                                   \
-    find_child_ui_node(find_child_ui_node(root, first_name), second_name)
+    find_child_ui_node_by_name(find_child_ui_node_by_name(root, first_name), second_name)
 
 #define get_third_level_node_by_path(root, first_name, second_name, third_name)                                        \
-    find_child_ui_node(find_child_ui_node(find_child_ui_node(root, first_name), second_name), third_name)
+    find_child_ui_node_by_name(find_child_ui_node_by_name(find_child_ui_node_by_name(root, first_name), second_name),  \
+                               third_name)
 
 #endif /* __SIMPLE_UI_MIDDLEWARE_TREENODE_H_ */
