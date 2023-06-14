@@ -4,7 +4,7 @@
  * @author  Enoky Bertram
  * @version v0.0.0 dev5
  * @date    Jun.14.2023
- * @brief   A Simple UI Switcher /一个简易用户界面
+ * @brief   A Simple UI/一个简易用户界面
  * @note    happyhappyhappy
  ******************************************************************************
  */
